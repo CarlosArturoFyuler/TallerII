@@ -39,8 +39,9 @@ public class FrameInfoCot extends JFrame{
 	private int idCotizacion;
 	private BDM bdm;
 	JFormattedTextField efDecimal;
+	private GUI principalCot;
 	
-	public FrameInfoCot(int idCotizacion){
+	public FrameInfoCot(int idCotizacion, GUI principalCot){
 		super("Confirmar Datos");
 		this.idCotizacion = idCotizacion;
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,6 +50,7 @@ public class FrameInfoCot extends JFrame{
 		this.setResizable(false);
 		bdm = new BDM();
 		this.obtDatos();
+		this.principalCot=principalCot;
 		this.setVisible(true);		
 	}
 	
@@ -131,7 +133,7 @@ public class FrameInfoCot extends JFrame{
 		*/
 		//  JFormattedTextField efFecha = new JFormattedTextField(new Date());
 		
-		efDecimal = new JFormattedTextField(new Double(0));
+		efDecimal = new JFormattedTextField();
 				 // Formato de visualización
 		 NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
 				 // Formato de edición: inglés (separador decimal: el punto)
@@ -166,7 +168,8 @@ public class FrameInfoCot extends JFrame{
 	}
 	
 	private void regVenta(){
-		int rs = 0;
+		if (!efDecimal.getText().isEmpty()){
+			int rs = 0;
 			Calendar currentDate = Calendar.getInstance(); //Get the current date
 			SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
 			String dateNow = formatter.format(currentDate.getTime());
@@ -175,6 +178,7 @@ public class FrameInfoCot extends JFrame{
 			//Registrar Venta:
 			try {
 				v.registrarVenta(v.getFecha(), v.getCotizacion(), bdm);
+				v.cambiarEstatus(v.getCotizacion(), bdm);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
@@ -199,7 +203,12 @@ public class FrameInfoCot extends JFrame{
 				JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
 			}
 			JOptionPane.showMessageDialog(this, "Se ha registrado una nueva venta y el abono de esta también quedó registrada en el sistema");
-		this.dispose();		
+		this.dispose();
+		principalCot.dispose();
+		
+		}else{
+			JOptionPane.showMessageDialog(this,"Por favor, ingrese un monto en el campo Anticipo, e intente de nuevo");
+		}
 	}
 
 }

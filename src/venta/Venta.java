@@ -40,4 +40,9 @@ private int cotizacion;
 		return bdm.getSt().executeQuery("SELECT venta.idVenta, venta.fechaVenta, cotizacion.nombreCliente, cotizacion.totalCotizacion, cotizacion.tipoEvento, cotizacion.fechaEvento from venta inner join cotizacion on venta.Cotizacion_idCotizacion = cotizacion.idCotizacion where cotizacion.nombreCliente like "+"'%"+nomClie+"%'");
 	}
 	
+	public void cambiarEstatus(int idCot, BDM bdm) throws SQLException{
+		String query = "UPDATE cotizacion set estatusCotizacion=1 where idCotizacion ="+idCot;
+		bdm.getSt().executeUpdate(query);
+	}
+	
 }

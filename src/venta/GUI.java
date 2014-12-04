@@ -4,8 +4,11 @@ import java.awt.FlowLayout;
 import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +69,11 @@ public class GUI extends JFrame{
 				//buscar cotizaciones por nombre de cliente
 				aux = Cotizacion.buscarCotCli(cliente.getText(), bdm);
 				while(aux.next()){
-					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(3), aux.getObject(4)};
+					//CHECAR ESTO (Te estoy hablando a ti! Gusano Elizondo!)
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+					System.out.println(aux.getObject(4).toString());
+					System.out.println("PARSEADO: "+sdf.parse(aux.getObject(4).toString()));
+					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(3), sdf.parse(aux.getObject(4).toString())};
 					ids.add((Integer)aux.getObject(1));
 					dtm.addRow(fila);
 				}
@@ -84,7 +91,24 @@ public class GUI extends JFrame{
 		//dtm.setColumnIdentifiers(titulos);
 		//cotTable.setEnabled(false);
 		busqueda = new JLabel("Nombre del cliente: ");
-		cliente = new JTextField(20);
+		cliente = new JTextField(23);
+		cliente.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (cliente.getText().length()==23)
+					e.consume();
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+			}
+		});
 		buscar = new JButton("Buscar");
 		buscar.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -93,12 +117,13 @@ public class GUI extends JFrame{
 		});
 		registVenta = new JButton("Registrar Venta");
 		//Llamo a el resumen de la cotizacion
+		final GUI principal = this;
 		registVenta.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				int[] selecciones = cotTable.getSelectedRows();
 				if (selecciones.length==1 ){
 					int selectedObject = (Integer) cotTable.getModel().getValueAt(selecciones[0],0);
-					ficot = new FrameInfoCot(selectedObject);
+					ficot = new FrameInfoCot(selectedObject,principal);
 				}
 				else{
 					JOptionPane.showMessageDialog(ficot,"Debe seleccionar una cotización");
@@ -113,6 +138,9 @@ public class GUI extends JFrame{
 		this.add(scroll);
 		this.add(registVenta);
 		
+	}
+	public GUI getGUI(){
+		return this;
 	}
 
 }

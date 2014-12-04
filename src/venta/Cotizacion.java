@@ -97,7 +97,7 @@ private String tipoEvento;
 	}
 
 	public static ResultSet buscarCotCli(String nomClie,BDM bdm) throws SQLException{
-		return bdm.getSt().executeQuery("SELECT idCotizacion,nombreCliente,lugar,fechaEvento FROM cotizacion where nombreCliente like "+"'%"+nomClie+"%'");
+		return bdm.getSt().executeQuery("SELECT idCotizacion,nombreCliente,lugar,fechaEvento FROM cotizacion where nombreCliente like "+"'%"+nomClie+"%' AND estatusCotizacion =0");
 	}
 	public static ResultSet buscarCot(int idCot,BDM bdm) throws SQLException{
 		return bdm.getSt().executeQuery("SELECT cantAsistentes,notasCotizacion,nombreCliente,lugar,totalCotizacion,fechaEvento,tipoEvento FROM cotizacion where idCotizacion ="+idCot);

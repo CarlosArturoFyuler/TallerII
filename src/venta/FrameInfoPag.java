@@ -105,21 +105,19 @@ public class FrameInfoPag extends JFrame{
 		regAbono.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				//Registrar el abono 
-				if (!abono.getText().isEmpty()){
 					regAbono();
-				}
 			}
 		});
 		scroll = new JScrollPane(pagosTable);
 		scroll.setBounds(0,0,800,400);
-		lblSumaTotTxt = new JLabel("Suma Total: ");
+		lblSumaTotTxt = new JLabel("Suma Abonos: ");
 		lblSumaTotRs = new JLabel(String.valueOf(sumaPagos));
 		lblTotalRestTxt = new JLabel("Total Restante: ");
 		double totRest = totalCot-sumaPagos;
 		lblTotRestRs = new JLabel(String.valueOf(totRest));
 		
 		lblabonoNuevo = new JLabel("Abono Nuevo:");
-		abono = new JFormattedTextField(new Double(0));
+		abono = new JFormattedTextField();
 		NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
 		NumberFormat editFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		editFormat.setGroupingUsed(false);
@@ -153,7 +151,9 @@ public class FrameInfoPag extends JFrame{
 			}
 		});
 		this.add(scroll,BorderLayout.PAGE_START);
-		this.add(regAbono,BorderLayout.PAGE_END);
+		if (totRest>0){
+			this.add(regAbono,BorderLayout.PAGE_END);
+		}
 		JPanel pan = new JPanel(new FlowLayout());
 		pan.add(lblSumaTotTxt);
 		pan.add(lblSumaTotRs);
@@ -165,8 +165,9 @@ public class FrameInfoPag extends JFrame{
 	}
 	
 	public void regAbono(){
+		if (!abono.getText().isEmpty()){
 		Calendar currentDate = Calendar.getInstance(); //Get the current date
-		SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"); //format it as per your requirement
+		SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		String dateNow = formatter.format(currentDate.getTime());
 		Pago pago = new Pago(idVenta,dateNow,Double.parseDouble(abono.getValue().toString()));
 		try {
@@ -175,7 +176,41 @@ public class FrameInfoPag extends JFrame{
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
 		}
-		this.obtDatos();
+		//actualizamos el abono
+		sumaPagos=0;
+		dtm.setRowCount(0);
+		dtm.setColumnCount(0);
+		dtm.setColumnIdentifiers(titulos);
+		ids.clear();
+		ResultSet aux2 = null;
+		try {
+			ResultSet aux = null;
+			aux = Pago.obtPagos(idVenta, bdm);
+			int numPag=1;
+			while(aux.next()){
+				Object[] fila ={numPag++, aux.getObject(3), aux.getObject(2)};
+				sumaPagos=sumaPagos+(Double)aux.getObject(3);
+				ids.add((Integer)aux.getObject(1));
+				dtm.addRow(fila);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		double totRest = totalCot-sumaPagos;
+		lblSumaTotRs.setText(String.valueOf(sumaPagos));
+		lblTotRestRs.setText(String.valueOf(totRest));	
+		if(totRest<=0){
+			regAbono.setVisible(false);
+		}
+		//ocultamo el boton y la barra de insercion
+		regAbono.setVisible(false);
+		lblabonoNuevo.setVisible(false);
+		abono.setVisible(false);
+		}else{
+			JOptionPane.showMessageDialog(this,"Por favor, ingrese un monto en el campo Abono, e intente de nuevo");
+		}
 	}
 
 }
