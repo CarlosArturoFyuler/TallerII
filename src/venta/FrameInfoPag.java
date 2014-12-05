@@ -112,9 +112,7 @@ public class FrameInfoPag extends JFrame{
 					regAbono();
 			}
 		});
-		JPanel fin = new JPanel(new FlowLayout());
-		this.add(fin,BorderLayout.PAGE_END);
-		fin.add(regAbono);
+		
 		
 		scroll = new JScrollPane(pagosTable);
 		scroll.setBounds(0,0,800,400);
@@ -131,6 +129,11 @@ public class FrameInfoPag extends JFrame{
 		NumberFormat editFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		editFormat.setGroupingUsed(false);
 		//nuevo
+		JPanel fin = new JPanel(new FlowLayout());
+		if (totRest>0.0){
+			this.add(fin,BorderLayout.PAGE_END);
+			fin.add(regAbono);
+		}
 		dispFormat.setMaximumIntegerDigits(10);
 		editFormat.setMaximumIntegerDigits(10);
 		NumberFormatter dnFormat = new NumberFormatter(dispFormat);
@@ -159,10 +162,9 @@ public class FrameInfoPag extends JFrame{
 				
 			}
 		});
-		this.add(scroll,BorderLayout.PAGE_START);
-		if (totRest>0){
-			this.add(fin,BorderLayout.PAGE_END);
-		}
+		this.add(scroll,BorderLayout.PAGE_START);	
+		this.add(fin,BorderLayout.PAGE_END);
+		
 		JPanel panpapi = new JPanel(new GridLayout(2,1));
 		JPanel pansup = new JPanel(new FlowLayout());
 		JPanel paninf = new JPanel(new FlowLayout());
@@ -170,9 +172,10 @@ public class FrameInfoPag extends JFrame{
 		pansup.add(lblSumaTotRs);
 		pansup.add(lblTotalRestTxt);
 		pansup.add(lblTotRestRs);
-		
-		paninf.add(lblabonoNuevo);
-		paninf.add(abono);
+		if (totRest>0.0){
+			paninf.add(lblabonoNuevo);
+			paninf.add(abono);
+		}
 		panpapi.add(pansup);
 		panpapi.add(paninf);
 		

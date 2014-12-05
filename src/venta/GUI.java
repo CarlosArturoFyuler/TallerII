@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class GUI extends JFrame{
 	
-	private final String[] titulos = {" Folio Cotizacion","Cliente", "Lugar", "Fecha"};
+	private final String[] titulos = {" Folio Cotizacion","Cliente", "Salón","Ciudad Evento", "Fecha"};
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private JTable cotTable = new JTable (dtm){
 		public boolean isCellEditable(int Row, int vColIndex){
@@ -70,10 +70,10 @@ public class GUI extends JFrame{
 				aux = Cotizacion.buscarCotCli(cliente.getText(), bdm);
 				while(aux.next()){
 					//CHECAR ESTO (Te estoy hablando a ti! Gusano Elizondo!)
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-					System.out.println(aux.getObject(4).toString());
-					System.out.println("PARSEADO: "+sdf.parse(aux.getObject(4).toString()));
-					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(3), sdf.parse(aux.getObject(4).toString())};
+					//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+					//System.out.println(aux.getObject(4).toString());
+					//System.out.println("PARSEADO: "+sdf.parse(aux.getObject(4).toString()));
+					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(3),aux.getObject(4),aux.getObject(5).toString()};
 					ids.add((Integer)aux.getObject(1));
 					dtm.addRow(fila);
 				}

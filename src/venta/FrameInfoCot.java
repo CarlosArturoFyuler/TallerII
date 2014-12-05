@@ -101,7 +101,7 @@ public class FrameInfoCot extends JFrame{
 		tipoEv = new JLabel("Tipo de Evento:");
 		centro.add(tipoEv);
 		centro.add(tipo);
-		lugarEv = new JLabel("Lugar Evento:");
+		lugarEv = new JLabel("Ciudad del Evento:");
 		centro.add(lugarEv);
 		centro.add(lugar);
 		fechaEv = new JLabel("Fecha de Evento:");
@@ -202,7 +202,7 @@ public class FrameInfoCot extends JFrame{
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
 			}
-			JOptionPane.showMessageDialog(this, "Se ha registrado una nueva venta y el abono de esta también quedó registrada en el sistema");
+			JOptionPane.showMessageDialog(this, "Su venta ha quedado registrada en el sistema");
 		this.dispose();
 		principalCot.dispose();
 		
