@@ -30,7 +30,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class GUI extends JFrame{
 	
-	private final String[] titulos = {"idCotizacion","Cliente", "Lugar", "Fecha"};
+	private final String[] titulos = {" Folio Cotizacion","Cliente", "Lugar", "Fecha"};
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private JTable cotTable = new JTable (dtm){
 		public boolean isCellEditable(int Row, int vColIndex){

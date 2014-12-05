@@ -1,7 +1,10 @@
 package venta;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -101,6 +104,7 @@ public class FrameInfoPag extends JFrame{
 		}
 		//System.out.println(sumaPagos);
 		regAbono = new JButton("Registrar Abono");
+		regAbono.setPreferredSize(new Dimension(150,30));
 		//Registro nuevo abono a la BD
 		regAbono.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -108,14 +112,19 @@ public class FrameInfoPag extends JFrame{
 					regAbono();
 			}
 		});
+		JPanel fin = new JPanel(new FlowLayout());
+		this.add(fin,BorderLayout.PAGE_END);
+		fin.add(regAbono);
+		
 		scroll = new JScrollPane(pagosTable);
 		scroll.setBounds(0,0,800,400);
 		lblSumaTotTxt = new JLabel("Suma Abonos: ");
 		lblSumaTotRs = new JLabel(String.valueOf(sumaPagos));
+		lblSumaTotRs.setForeground(Color.blue);
 		lblTotalRestTxt = new JLabel("Total Restante: ");
 		double totRest = totalCot-sumaPagos;
 		lblTotRestRs = new JLabel(String.valueOf(totRest));
-		
+		lblTotRestRs.setForeground(Color.RED);
 		lblabonoNuevo = new JLabel("Abono Nuevo:");
 		abono = new JFormattedTextField();
 		NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
@@ -152,16 +161,22 @@ public class FrameInfoPag extends JFrame{
 		});
 		this.add(scroll,BorderLayout.PAGE_START);
 		if (totRest>0){
-			this.add(regAbono,BorderLayout.PAGE_END);
+			this.add(fin,BorderLayout.PAGE_END);
 		}
-		JPanel pan = new JPanel(new FlowLayout());
-		pan.add(lblSumaTotTxt);
-		pan.add(lblSumaTotRs);
-		pan.add(lblTotalRestTxt);
-		pan.add(lblTotRestRs);
-		pan.add(lblabonoNuevo);
-		pan.add(abono);
-		this.add(pan,BorderLayout.CENTER);	
+		JPanel panpapi = new JPanel(new GridLayout(2,1));
+		JPanel pansup = new JPanel(new FlowLayout());
+		JPanel paninf = new JPanel(new FlowLayout());
+		pansup.add(lblSumaTotTxt);
+		pansup.add(lblSumaTotRs);
+		pansup.add(lblTotalRestTxt);
+		pansup.add(lblTotRestRs);
+		
+		paninf.add(lblabonoNuevo);
+		paninf.add(abono);
+		panpapi.add(pansup);
+		panpapi.add(paninf);
+		
+		this.add(panpapi,BorderLayout.CENTER);	
 	}
 	
 	public void regAbono(){

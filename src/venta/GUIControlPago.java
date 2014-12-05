@@ -18,7 +18,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 public class GUIControlPago extends JFrame {
-	private final String[] titulos = {"idVenta","Fecha de la Venta","Evento", "NombreCliente", "Fecha Evento","Precio"};
+	private final String[] titulos = {" Folio Venta","Fecha de la Venta","Evento", "NombreCliente", "Fecha Evento","Precio"};
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private JTable ventasTable = new JTable (dtm){
 		public boolean isCellEditable(int Row, int vColIndex){
