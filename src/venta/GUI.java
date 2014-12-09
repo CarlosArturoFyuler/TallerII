@@ -1,5 +1,7 @@
 package venta;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -30,7 +33,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class GUI extends JFrame{
 	
-	private final String[] titulos = {" Folio Cotizacion","Cliente", "Salón","Ciudad Evento", "Fecha"};
+	private final String[] titulos = {" Folio Cotizacion","Nombre Cliente", "Salón","Ciudad Evento", "Fecha"};
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private JTable cotTable = new JTable (dtm){
 		public boolean isCellEditable(int Row, int vColIndex){
@@ -51,8 +54,8 @@ public class GUI extends JFrame{
 	public GUI(){
 		super ("Generar Venta");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLayout(new FlowLayout());
-		this.setSize(510, 510);
+		this.setLayout(new BorderLayout());
+		this.setSize(800, 550);
 		this.setResizable(false);
 		this.addComponents();
 		this.setVisible(true);
@@ -73,7 +76,7 @@ public class GUI extends JFrame{
 					//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 					//System.out.println(aux.getObject(4).toString());
 					//System.out.println("PARSEADO: "+sdf.parse(aux.getObject(4).toString()));
-					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(3),aux.getObject(4),aux.getObject(5).toString()};
+					Object[] fila ={aux.getObject(1), aux.getObject(2).toString()+" "+ aux.getObject(3).toString()+" "+aux.getObject(4).toString(),aux.getObject(5),aux.getObject(6),aux.getObject(7).toString()};
 					ids.add((Integer)aux.getObject(1));
 					dtm.addRow(fila);
 				}
@@ -88,9 +91,11 @@ public class GUI extends JFrame{
 	public void addComponents(){
 		
 		cotTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//cotTable.setBounds(0, 0, 200, 100);
 		//dtm.setColumnIdentifiers(titulos);
 		//cotTable.setEnabled(false);
-		busqueda = new JLabel("Nombre del cliente: ");
+		JPanel superior = new JPanel(new FlowLayout());		
+		busqueda = new JLabel("Nombre cliente/salon: ");
 		cliente = new JTextField(23);
 		cliente.addKeyListener(new KeyListener() {
 			
@@ -114,7 +119,8 @@ public class GUI extends JFrame{
 			public void actionPerformed(ActionEvent e){
 			busqCotizaciones();
 			}
-		});
+		});		
+		
 		registVenta = new JButton("Registrar Venta");
 		//Llamo a el resumen de la cotizacion
 		final GUI principal = this;
@@ -130,14 +136,20 @@ public class GUI extends JFrame{
 				}
 			}
 		});
+		JPanel centro = new JPanel(new FlowLayout(FlowLayout.CENTER));				
 		scroll = new JScrollPane(cotTable);
-		scroll.setBounds(0,0,800,400);
-		this.add(busqueda);
-		this.add(cliente);
-		this.add(buscar);
-		this.add(scroll);
-		this.add(registVenta);
+		scroll.setPreferredSize(new Dimension(700,400));
 		
+		//scroll.setBounds(100,50,0,0);
+		superior.add(busqueda);
+		superior.add(cliente);
+		superior.add(buscar);
+		this.add(superior,BorderLayout.PAGE_START);
+		centro.add(scroll);
+		this.add(centro, BorderLayout.CENTER);
+		JPanel inferior = new JPanel(new FlowLayout());
+		inferior.add(registVenta);
+		this.add(inferior,BorderLayout.PAGE_END);		
 	}
 	public GUI getGUI(){
 		return this;

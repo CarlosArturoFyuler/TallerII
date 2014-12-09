@@ -1,5 +1,7 @@
 package venta;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -18,7 +21,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 public class GUIControlPago extends JFrame {
-	private final String[] titulos = {" Folio Venta","Fecha de la Venta","Evento", "NombreCliente", "Fecha Evento","Precio"};
+	private final String[] titulos = {" Folio Venta","Fecha Venta","Evento", "NombreCliente", "Fecha Evento","Precio"};
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private JTable ventasTable = new JTable (dtm){
 		public boolean isCellEditable(int Row, int vColIndex){
@@ -37,14 +40,18 @@ public class GUIControlPago extends JFrame {
 	public GUIControlPago(){
 		super ("Control de Pagos");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLayout(new FlowLayout());
-		this.setSize(510, 510);
+		this.setLayout(new BorderLayout());
+		this.setSize(800, 550);
 		this.setResizable(false);
 		this.addComponents();
 		this.setVisible(true);
 	}
 	
 	public void addComponents(){
+		
+		JPanel superior = new JPanel(new FlowLayout());
+		JPanel central = new JPanel();
+		JPanel inferior = new JPanel();
 		
 		ventasTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		busqueda = new JLabel("Nombre del cliente: ");
@@ -70,12 +77,19 @@ public class GUIControlPago extends JFrame {
 			}
 		});
 		scroll = new JScrollPane(ventasTable);
-		scroll.setBounds(0,0,800,400);
-		this.add(busqueda);
-		this.add(cliente);
-		this.add(buscar);
-		this.add(scroll);
-		this.add(verPagos);
+		scroll.setPreferredSize(new Dimension(700,400));
+		
+		// Se añaden los paneles
+		superior.add(busqueda);
+		superior.add(cliente);
+		superior.add(buscar);
+		this.add(superior,BorderLayout.PAGE_START);
+		
+		central.add(scroll);
+		this.add(central,BorderLayout.CENTER);
+		
+		inferior.add(verPagos);
+		this.add(inferior,BorderLayout.PAGE_END);
 		
 	}
 	
@@ -91,7 +105,7 @@ public class GUIControlPago extends JFrame {
 				//buscar ventas por nombre de cliente
 				aux = Venta.buscarVentCli(cliente.getText(), bdm);
 				while(aux.next()){
-					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(5), aux.getObject(3), aux.getObject(6), aux.getObject(4)};
+					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(10), aux.getObject(3).toString()+" "+aux.getObject(4).toString()+" "+aux.getObject(5).toString(), aux.getObject(11), (Double)aux.getObject(6)+(Double)aux.getObject(7)+(Double)aux.getObject(8)+(Double)aux.getObject(9)};
 					ids.add((Integer)aux.getObject(1));		
 					dtm.addRow(fila);
 				}

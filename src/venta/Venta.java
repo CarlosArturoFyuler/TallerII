@@ -37,7 +37,7 @@ private int cotizacion;
 	}
 	
 	public static ResultSet buscarVentCli(String nomClie,BDM bdm) throws SQLException{
-		return bdm.getSt().executeQuery("SELECT venta.idVenta, venta.fechaVenta, cotizacion.nombreCliente, cotizacion.totalCotizacion, cotizacion.tipoEvento, cotizacion.fechaEvento from venta inner join cotizacion on venta.Cotizacion_idCotizacion = cotizacion.idCotizacion where cotizacion.nombreCliente like "+"'%"+nomClie+"%'");
+		return bdm.getSt().executeQuery("SELECT venta.idVenta, venta.fechaVenta, cotizacion.nombreCliente, cotizacion.apellidoPatCliente,cotizacion.apellidoMatCliente, cotizacion.totalCotizacion,cotizacion.costoSalonCotizacion,cotizacion.costoMusicaCotizacion,cotizacion.costoOtrosCotizacion, cotizacion.tipoEvento, cotizacion.fechaEvento from venta inner join cotizacion on venta.Cotizacion_idCotizacion = cotizacion.idCotizacion where (cotizacion.nombreCliente like "+"'%"+nomClie+"%' OR cotizacion.apellidoPatCliente like "+"'%"+nomClie+ "%' OR cotizacion.apellidoMatCliente like "+"'%"+nomClie+ "%')  ORDER BY idVenta DESC");
 	}
 	
 	public void cambiarEstatus(int idCot, BDM bdm) throws SQLException{

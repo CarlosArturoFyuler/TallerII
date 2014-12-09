@@ -76,7 +76,7 @@ public class FrameInfoPag extends JFrame{
 		try {
 			aux2=((Cotizacion.obtTotal(idVenta, bdm)));
 			while(aux2.next()){
-				totalCot=(Double)aux2.getObject(1);
+				totalCot=(Double)aux2.getObject(1)+(Double)aux2.getObject(2)+(Double)aux2.getObject(3)+(Double)aux2.getObject(4);
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
