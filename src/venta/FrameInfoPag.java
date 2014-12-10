@@ -36,6 +36,7 @@ public class FrameInfoPag extends JFrame{
 	private JLabel lblSumaTotTxt, lblSumaTotRs, lblTotalRestTxt, lblTotRestRs, lblabonoNuevo;
 	private JButton regAbono;
 	private int idVenta;
+	private Float totRest;
 	private BDM bdm;
 	JFormattedTextField abono;
 	private final String[] titulos = {"No. Pago","Monto","Fecha"};
@@ -120,7 +121,7 @@ public class FrameInfoPag extends JFrame{
 		lblSumaTotRs = new JLabel(String.valueOf(sumaPagos));
 		lblSumaTotRs.setForeground(Color.blue);
 		lblTotalRestTxt = new JLabel("Total Restante: ");
-		Float totRest = totalCot-sumaPagos;
+		totRest = totalCot-sumaPagos;
 		lblTotRestRs = new JLabel(String.valueOf(totRest));
 		lblTotRestRs.setForeground(Color.RED);
 		lblabonoNuevo = new JLabel("Abono Nuevo:");
@@ -183,7 +184,8 @@ public class FrameInfoPag extends JFrame{
 	}
 	
 	public void regAbono(){
-		if (!abono.getText().isEmpty()){
+		Float montoAbono = Float.parseFloat(abono.getValue().toString());			
+		if ( (!abono.getText().isEmpty()) && (montoAbono <= totRest)){
 			Calendar currentDate = Calendar.getInstance(); //Get the current date
 			SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			String dateNow = formatter.format(currentDate.getTime());
@@ -227,7 +229,7 @@ public class FrameInfoPag extends JFrame{
 		lblabonoNuevo.setVisible(false);
 		abono.setVisible(false);
 		}else{
-			JOptionPane.showMessageDialog(this,"Por favor, ingrese un monto en el campo Abono, e intente de nuevo");
+			JOptionPane.showMessageDialog(this,"Por favor, ingrese un monto válido en el campo Abono e intente de nuevo");
 		}
 	}
 
