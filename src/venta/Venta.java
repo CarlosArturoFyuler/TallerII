@@ -29,19 +29,19 @@ private int cotizacion;
 		this.cotizacion = cotizacion;
 	}
 	
-	public void registrarVenta(String fecha, int idCotizacion, BDM bdm) throws SQLException{
+	public void registrarVenta(String fecha, int idCotizacion,Float costoSalon,Float costomusica,Float costootros, Float costototal,BDM bdm) throws SQLException{
 		if(!this.fecha.isEmpty()&&this.cotizacion!=0){
-			String query = "INSERT INTO venta (fechaVenta,Cotizacion_idCotizacion) VALUES ('"+fecha+"','"+idCotizacion+"')";
+			String query = "INSERT INTO venta (fechaVenta,Cotizacion_idCotizacion,costosalon,costomusica,costootros,costototal) VALUES ('"+fecha+"',"+idCotizacion+","+costoSalon+","+costomusica+","+costootros+","+costototal+")";
 			bdm.getSt().executeUpdate(query);
 		}
 	}
 	
 	public static ResultSet buscarVentCli(String nomClie,BDM bdm) throws SQLException{
-		return bdm.getSt().executeQuery("SELECT venta.idVenta, venta.fechaVenta, cotizacion.nombreCliente, cotizacion.apellidoPatCliente,cotizacion.apellidoMatCliente, cotizacion.totalCotizacion,cotizacion.costoSalonCotizacion,cotizacion.costoMusicaCotizacion,cotizacion.costoOtrosCotizacion, cotizacion.tipoEvento, cotizacion.fechaEvento from venta inner join cotizacion on venta.Cotizacion_idCotizacion = cotizacion.idCotizacion where (cotizacion.nombreCliente like "+"'%"+nomClie+"%' OR cotizacion.apellidoPatCliente like "+"'%"+nomClie+ "%' OR cotizacion.apellidoMatCliente like "+"'%"+nomClie+ "%')  ORDER BY idVenta DESC");
+		return bdm.getSt().executeQuery("SELECT venta.idventa, venta.fechaVenta,cotizacion.tipoevento, cotizacion.Nombre, cotizacion.ApPaterno,cotizacion.ApMaterno,cotizacion.fechaevento,venta.costototal, cotizacion.nombreinsumo from venta inner join cotizacion on venta.Cotizacion_idCotizacion = cotizacion.idcotizacion where (cotizacion.Nombre like "+"'%"+nomClie+"%' OR cotizacion.ApPaterno like "+"'%"+nomClie+ "%' OR cotizacion.ApMaterno like "+"'%"+nomClie+ "%')  ORDER BY idventa DESC");
 	}
 	
 	public void cambiarEstatus(int idCot, BDM bdm) throws SQLException{
-		String query = "UPDATE cotizacion set estatusCotizacion=1 where idCotizacion ="+idCot;
+		String query = "UPDATE cotizacion set estado=1 where idCotizacion ="+idCot;
 		bdm.getSt().executeUpdate(query);
 	}
 	

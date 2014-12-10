@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.security.acl.LastOwnerException;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -36,15 +38,16 @@ import javax.swing.text.NumberFormatter;
 
 @SuppressWarnings("serial")
 public class FrameInfoCot extends JFrame{
-	private JLabel infoCot, cantAsistEv, cantAsist,  nomClient, nom, lugarEv, lugar,
-	totalCot, total, fechaEv, fecha, tipoEv, tipo, anticipo, notasCotizacion, notas,
-	lblcostoSalonTxt, lblcostoSalon, lblcostoMusicaTxt,lblcostoMusica, lblcostoOtrosTxt, lblcostoOtros, lblSumaCostoTxt, lblSumaCosto,
+	private JLabel infoCot, nomClient, nom, lugarEv, lugar,
+	totalCot, total, fechaEv, fecha, tipoEv, tipo, anticipo, notasCotizacion,
+	lblcostoSalonTxt, lblcostoMusicaTxt, lblcostoOtrosTxt, lblSumaCostoTxt, lblSumaCosto,
 	lblNombreSalonTxt, lblNombreSalon;
 	private JButton registrar;
 	private int idCotizacion;
 	private BDM bdm;
-	JFormattedTextField efDecimal;
+	JFormattedTextField efDecimal,TFCostoSalon, TFCostoMusica, TFCostoOtros;
 	private GUI principalCot;
+	private Cotizacion cot;
 	JTextArea tArea;
 	
 	public FrameInfoCot(int idCotizacion, GUI principalCot){
@@ -61,16 +64,14 @@ public class FrameInfoCot extends JFrame{
 	}
 	
 	public void obtDatos(){
-		cantAsist=null;
 		nom=null;
 		lugar=null;
 		total=null;
 		fecha=null;
 		tipo=null;
-		notas =null;
-		lblcostoMusica=null;
-		lblcostoOtros=null;
-		lblcostoSalon=null;
+		TFCostoMusica=null;
+		TFCostoOtros=null;
+		TFCostoSalon=null;
 		lblSumaCosto=null;
 		lblNombreSalon=null;
 		int sumaCosto=0;
@@ -92,20 +93,75 @@ public class FrameInfoCot extends JFrame{
 			ResultSet aux = null;
 			aux=Cotizacion.buscarCot(idCotizacion, bdm); 
 			while(aux.next()){
-				 	Cotizacion cot = new Cotizacion((Integer)aux.getObject(1),aux.getObject(2).toString(),aux.getObject(3).toString(),
-				 	aux.getObject(4).toString(),(Double)aux.getObject(5),(Double)aux.getObject(6),(Double)aux.getObject(7),
-				 	(Double)aux.getObject(8),aux.getObject(9).toString(),aux.getObject(10).toString(),aux.getObject(11).toString());
+				 	cot = new Cotizacion(aux.getObject(1).toString(),aux.getObject(2).toString(),aux.getObject(3).toString(),(Float)aux.getObject(4),aux.getObject(5).toString(),aux.getObject(6).toString(),aux.getObject(7).toString());
 				 	
-					cantAsist= new JLabel(Integer.toString(cot.getCantAsistentes()));
 					tArea = new JTextArea(cot.getNotasCot());
-					notas = new JLabel(cot.getNotasCot());
 					nom = new JLabel(cot.getNombreCliente());
 					lugar = new JLabel(cot.getLugar());
-					total = new JLabel('$'+Double.toString(cot.getTotalCotizacion()));
-					lblcostoSalon= new JLabel('$'+Double.toString(cot.getCostoSalonCotizacion()));
-					lblcostoMusica= new JLabel('$'+Double.toString(cot.getCostoMusicaCotizacion()));
-					lblcostoOtros= new JLabel('$'+Double.toString(cot.getCostoOtrosCotizacion()));
-					lblSumaCosto = new JLabel('$'+Double.toString(cot.obtenerTotal()));
+					total = new JLabel('$'+Float.toString(cot.getTotalCotizacion()));
+					TFCostoSalon = new JFormattedTextField(new Float(0.0));
+					 NumberFormat dispFormat = NumberFormat.getCurrencyInstance();
+					 NumberFormat editFormat = NumberFormat.getNumberInstance(Locale.ENGLISH);
+					 editFormat.setGroupingUsed(false);
+					 NumberFormatter dnFormat = new NumberFormatter(dispFormat);
+					 NumberFormatter enFormat = new NumberFormatter(editFormat);
+					 DefaultFormatterFactory currFactory = new DefaultFormatterFactory(dnFormat, dnFormat, enFormat);		 
+					 TFCostoSalon.setFormatterFactory(currFactory);		 
+					 TFCostoSalon.setColumns(10);
+					 TFCostoSalon.setPreferredSize(new Dimension(50,20));
+					 TFCostoSalon.addKeyListener(new KeyListener() {
+							@Override
+							public void keyTyped(KeyEvent e) {
+								if (TFCostoSalon.getText().length()==10)
+									e.consume();
+							}
+							@Override
+							public void keyReleased(KeyEvent arg0) {
+							}
+							
+							@Override
+							public void keyPressed(KeyEvent arg0) {
+							}
+						});
+					 TFCostoMusica = new JFormattedTextField(new Float(0.0));		 
+					 TFCostoMusica.setFormatterFactory(currFactory);		 
+					 TFCostoMusica.setColumns(10);
+					 TFCostoMusica.setPreferredSize(new Dimension(50,20));
+					 TFCostoMusica.addKeyListener(new KeyListener() {
+							@Override
+							public void keyTyped(KeyEvent e) {
+								if (TFCostoMusica.getText().length()==10)
+									e.consume();
+							}
+							@Override
+							public void keyReleased(KeyEvent arg0) {
+							}
+							
+							@Override
+							public void keyPressed(KeyEvent arg0) {
+							}
+						});
+					 TFCostoOtros = new JFormattedTextField(new Float(0.0));		 
+					 TFCostoOtros.setFormatterFactory(currFactory);		 
+					 TFCostoOtros.setColumns(10);
+					 TFCostoOtros.setPreferredSize(new Dimension(50,20));
+					 TFCostoOtros.addKeyListener(new KeyListener() {
+							@Override
+							public void keyTyped(KeyEvent e) {
+								if (TFCostoOtros.getText().length()==10)
+									e.consume();
+							}
+							@Override
+							public void keyReleased(KeyEvent arg0) {
+							}
+							
+							@Override
+							public void keyPressed(KeyEvent arg0) {
+							}
+						});
+	
+//					implementar cuando den click en calc total 
+					lblSumaCosto = new JLabel(Float.toString(cot.obtenerTotal(new Float(0.0),new Float(0.0),new Float(0.0))));					
 					lblNombreSalon = new JLabel(cot.getNombreSalon());	
 					fecha = new JLabel(cot.getFechaEvento());
 					tipo= new JLabel(cot.getTipoEvento());		
@@ -128,7 +184,6 @@ public class FrameInfoCot extends JFrame{
 		lugarEv = new JLabel("Ciudad del Evento:");
 		fechaEv = new JLabel("Fecha de Evento:");
 		lblNombreSalonTxt = new JLabel("Nombre del Salon: ");
-		cantAsistEv = new JLabel("Cantidad de Asistentes:");
 		
 		centroSuperior.add(nomClient);
 		centroSuperior.add(nom);
@@ -145,14 +200,10 @@ public class FrameInfoCot extends JFrame{
 		centroSuperior.add(lblNombreSalonTxt);
 		centroSuperior.add(lblNombreSalon);
 		
-		centroSuperior.add(cantAsistEv);			
-		centroSuperior.add(cantAsist);
-		
 		centro.add(centroSuperior,BorderLayout.PAGE_START);
 		
 		notasCotizacion = new JLabel("Notas Cotizacion:");
 		centroNotas.add(notasCotizacion);
-		//centroNotas.add(notas);
 		tArea.setEditable(false);			
 	    tArea.setLineWrap(true);       // wrap line
 	    tArea.setWrapStyleWord(true);  // wrap line at word boundary	    
@@ -170,17 +221,34 @@ public class FrameInfoCot extends JFrame{
 		centroInferior.add(total);
 		lblcostoMusicaTxt = new JLabel("Costo Musica:");
 		centroInferior.add(lblcostoMusicaTxt);
-		centroInferior.add(lblcostoMusica);
+		centroInferior.add(TFCostoMusica);
 		lblcostoSalonTxt = new JLabel("Costo Salon: ");
 		centroInferior.add(lblcostoSalonTxt);
-		centroInferior.add(lblcostoSalon);
+		centroInferior.add(TFCostoSalon);
 		lblcostoOtrosTxt = new JLabel("Costo Otros: ");
 		centroInferior.add(lblcostoOtrosTxt);
-		centroInferior.add(lblcostoOtros);
-		lblSumaCostoTxt = new JLabel("Costo Total de la Cotizacion: ");
-		centroInferior.add(lblSumaCostoTxt);
-		centroInferior.add(lblSumaCosto);		
-		anticipo = new JLabel("Anticipo:");
+		centroInferior.add(TFCostoOtros);
+		lblSumaCostoTxt = new JLabel("Total: ");		
+		centroInferior.add(lblSumaCostoTxt);		
+	    
+		JPanel total = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		total.add(lblSumaCosto);
+		JLabel vacio = new JLabel("    ");
+		total.add(vacio);
+		JButton calcular = new JButton("Calcular");
+		calcular.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent arg0) {
+				Float total = cot.obtenerTotal(Float.parseFloat(TFCostoMusica.getValue().toString()), Float.parseFloat(TFCostoOtros.getValue().toString()), Float.parseFloat(TFCostoSalon.getValue().toString()));
+				lblSumaCosto.setText(String.valueOf(total)); 	
+			}
+		});		
+		
+		total.add(calcular);
+		centroInferior.add(total);	
+		
+	    anticipo = new JLabel("Anticipo:");
 		centroInferior.add(anticipo);
 		/*montoant = new JTextField(10);
 		this.add(montoant);*/
@@ -213,8 +281,23 @@ public class FrameInfoCot extends JFrame{
 				 //enFormat.setAllowsInvalid(true);
 				 // Asignamos la factoría al campo		 
 		 efDecimal.setFormatterFactory(currFactory);		 
-		 efDecimal.setColumns(5);
-		 efDecimal.setPreferredSize(new Dimension(50,20));		 
+		 efDecimal.setColumns(10);
+		 efDecimal.setPreferredSize(new Dimension(50,20));
+		 efDecimal.addKeyListener(new KeyListener() {
+				
+				@Override
+				public void keyTyped(KeyEvent e) {
+					if (efDecimal.getText().length()==10)
+						e.consume();
+				}
+				@Override
+				public void keyReleased(KeyEvent arg0) {
+				}
+				
+				@Override
+				public void keyPressed(KeyEvent arg0) {
+				}
+			});
 		 JPanel auxiliar = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		 auxiliar.add(efDecimal);		 
 		 centroInferior.add(auxiliar);		 
@@ -245,7 +328,7 @@ public class FrameInfoCot extends JFrame{
 			Venta v = new Venta(dateNow,idCotizacion);
 			//Registrar Venta:
 			try {
-				v.registrarVenta(v.getFecha(), v.getCotizacion(), bdm);
+				v.registrarVenta(v.getFecha(), v.getCotizacion(), Float.parseFloat(TFCostoSalon.getValue().toString()),Float.parseFloat(TFCostoMusica.getValue().toString()),Float.parseFloat(TFCostoOtros.getValue().toString()),Float.parseFloat(lblSumaCosto.getText()),bdm);
 				v.cambiarEstatus(v.getCotizacion(), bdm);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -254,7 +337,7 @@ public class FrameInfoCot extends JFrame{
 			//obtenemos el ultimos ID de las ventas para ponerlo en la llave foranea de pago
 			try {
 				ResultSet aux = null;
-				 aux= bdm.getSt().executeQuery("SELECT max(idVenta) from venta");
+				 aux= bdm.getSt().executeQuery("SELECT max(idventa) from venta");
 				 while(aux.next()){
 						rs =(Integer)aux.getObject(1);
 					}
@@ -263,7 +346,7 @@ public class FrameInfoCot extends JFrame{
 				e.printStackTrace();
 			}
 			//insertamos el abono en la BD			
-			Pago pago = new Pago(rs,dateNow,Double.parseDouble(efDecimal.getValue().toString()));
+			Pago pago = new Pago(rs,dateNow,Float.parseFloat(efDecimal.getValue().toString()));
 			try {
 				pago.regPago(pago.getIdVenta(), pago.getFechaPago(), pago.getMontoPago(), bdm);
 			} catch (Exception e) {
@@ -273,7 +356,6 @@ public class FrameInfoCot extends JFrame{
 			JOptionPane.showMessageDialog(this, "Su venta ha quedado registrada en el sistema");
 		this.dispose();
 		principalCot.dispose();
-		
 		}else{
 			JOptionPane.showMessageDialog(this,"Por favor, ingrese un monto en el campo Anticipo, e intente de nuevo");
 		}

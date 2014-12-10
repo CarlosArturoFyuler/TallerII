@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class Pago {
 private String fechaPago;
 private int idVenta;
-private double montoPago;
+private Float montoPago;
 
-	public Pago(int idVenta, String fechaPago, double montoPago){
+	public Pago(int idVenta, String fechaPago, Float montoPago){
 		this.idVenta = idVenta;
 		this.fechaPago=fechaPago;
 		this.montoPago=montoPago;
@@ -31,15 +31,15 @@ private double montoPago;
 		this.idVenta = idVenta;
 	}
 
-	public double getMontoPago() {
+	public Float getMontoPago() {
 		return montoPago;
 	}
 
-	public void setMontoPago(double montoPago) {
+	public void setMontoPago(Float montoPago) {
 		this.montoPago = montoPago;
 	}
 	
-	public void regPago(int idVenta, String fecha, double montoPago, BDM bdm) throws SQLException{
+	public void regPago(int idVenta, String fecha, Float montoPago, BDM bdm) throws SQLException{
 		if (this.idVenta!=0 && !this.fechaPago.isEmpty()){
 			String query2 = "INSERT INTO pagos (Venta_idVenta,fechaPago,montoPago) VALUES ('"+idVenta+"','"+fecha+"','"+montoPago+"')";
 			bdm.getSt().executeUpdate(query2);

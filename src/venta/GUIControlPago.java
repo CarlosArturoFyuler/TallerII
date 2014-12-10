@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 public class GUIControlPago extends JFrame {
-	private final String[] titulos = {" Folio Venta","Fecha Venta","Evento", "NombreCliente", "Fecha Evento","Precio"};
+	private final String[] titulos = {" Folio Venta","Fecha Venta","Evento", "NombreCliente", "Fecha Evento","Salon","Precio"};
 	private DefaultTableModel dtm = new DefaultTableModel();
 	private JTable ventasTable = new JTable (dtm){
 		public boolean isCellEditable(int Row, int vColIndex){
@@ -55,7 +57,24 @@ public class GUIControlPago extends JFrame {
 		
 		ventasTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		busqueda = new JLabel("Nombre del cliente: ");
-		cliente = new JTextField(23);
+		cliente = new JTextField(25);
+		cliente.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (cliente.getText().length()==25)
+					e.consume();
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+			}
+		});
 		buscar = new JButton("Buscar");
 		buscar.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -105,7 +124,7 @@ public class GUIControlPago extends JFrame {
 				//buscar ventas por nombre de cliente
 				aux = Venta.buscarVentCli(cliente.getText(), bdm);
 				while(aux.next()){
-					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(10), aux.getObject(3).toString()+" "+aux.getObject(4).toString()+" "+aux.getObject(5).toString(), aux.getObject(11), (Double)aux.getObject(6)+(Double)aux.getObject(7)+(Double)aux.getObject(8)+(Double)aux.getObject(9)};
+					Object[] fila ={aux.getObject(1), aux.getObject(2), aux.getObject(3), aux.getObject(4).toString()+" "+aux.getObject(5).toString()+" "+aux.getObject(6).toString(), aux.getObject(7), (Float)aux.getObject(8),aux.getObject(9)};
 					ids.add((Integer)aux.getObject(1));		
 					dtm.addRow(fila);
 				}

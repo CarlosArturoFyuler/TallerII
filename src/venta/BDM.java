@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 public class BDM {
 
 	private final static String drv = "com.mysql.jdbc.Driver";
-	private final static String db = "jdbc:mysql://localhost:3306/Ventas";
+	private final static String db = "jdbc:mysql://localhost:3306/taller2";
 	private final static String user = "root";
 	private final static String pass = "123456";
 			
@@ -25,7 +25,7 @@ public class BDM {
 			System.out.println("Conexion exitosa");
 		} catch (Exception e) {
 			System.out.println("No se ha podido conectar =/"+e.toString());
-			JOptionPane.showMessageDialog(new JFrame(), "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
+			JOptionPane.showMessageDialog(new JFrame(), "Por el momento no ha sido posible conectarse a la Base de Datos, contacte el administrador de sistema");
 		}
 	}
 	

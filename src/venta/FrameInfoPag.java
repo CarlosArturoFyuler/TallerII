@@ -47,8 +47,8 @@ public class FrameInfoPag extends JFrame{
 	};
 	private JScrollPane scroll;
 	private List<Integer> ids = new ArrayList<Integer>();
-	private double totalCot;
-	private double sumaPagos;
+	private Float totalCot;
+	private Float sumaPagos;
 	
 	public FrameInfoPag(int idVenta){
 		super("Historial Ventas");
@@ -62,8 +62,8 @@ public class FrameInfoPag extends JFrame{
 	}
 	
 	public void obtDatos(){
-		totalCot=0;
-		sumaPagos=0;
+		totalCot=0.0f;
+		sumaPagos=0.0f;
 		ResultSet aux2 = null;
 		lblabonoNuevo=null;
 		lblSumaTotRs=null;
@@ -76,7 +76,7 @@ public class FrameInfoPag extends JFrame{
 		try {
 			aux2=((Cotizacion.obtTotal(idVenta, bdm)));
 			while(aux2.next()){
-				totalCot=(Double)aux2.getObject(1)+(Double)aux2.getObject(2)+(Double)aux2.getObject(3)+(Double)aux2.getObject(4);
+				totalCot=(Float)aux2.getObject(1);
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -94,7 +94,7 @@ public class FrameInfoPag extends JFrame{
 				int numPag=1;
 				while(aux.next()){
 					Object[] fila ={numPag++, aux.getObject(3), aux.getObject(2)};
-					sumaPagos=sumaPagos+(Double)aux.getObject(3);
+					sumaPagos=sumaPagos+Float.parseFloat(aux.getObject(3).toString());
 					ids.add((Integer)aux.getObject(1));
 					dtm.addRow(fila);
 				}
@@ -120,7 +120,7 @@ public class FrameInfoPag extends JFrame{
 		lblSumaTotRs = new JLabel(String.valueOf(sumaPagos));
 		lblSumaTotRs.setForeground(Color.blue);
 		lblTotalRestTxt = new JLabel("Total Restante: ");
-		double totRest = totalCot-sumaPagos;
+		Float totRest = totalCot-sumaPagos;
 		lblTotRestRs = new JLabel(String.valueOf(totRest));
 		lblTotRestRs.setForeground(Color.RED);
 		lblabonoNuevo = new JLabel("Abono Nuevo:");
@@ -184,18 +184,18 @@ public class FrameInfoPag extends JFrame{
 	
 	public void regAbono(){
 		if (!abono.getText().isEmpty()){
-		Calendar currentDate = Calendar.getInstance(); //Get the current date
-		SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		String dateNow = formatter.format(currentDate.getTime());
-		Pago pago = new Pago(idVenta,dateNow,Double.parseDouble(abono.getValue().toString()));
-		try {
-			pago.regPago(pago.getIdVenta(), pago.getFechaPago(), pago.getMontoPago(), bdm);
-		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
+			Calendar currentDate = Calendar.getInstance(); //Get the current date
+			SimpleDateFormat formatter= new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			String dateNow = formatter.format(currentDate.getTime());
+			Pago pago = new Pago(idVenta,dateNow,Float.parseFloat(abono.getValue().toString()));
+			try {
+				pago.regPago(pago.getIdVenta(), pago.getFechaPago(), pago.getMontoPago(), bdm);
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
 		}
 		//actualizamos el abono
-		sumaPagos=0;
+		sumaPagos=0.0f;
 		dtm.setRowCount(0);
 		dtm.setColumnCount(0);
 		dtm.setColumnIdentifiers(titulos);
@@ -207,7 +207,7 @@ public class FrameInfoPag extends JFrame{
 			int numPag=1;
 			while(aux.next()){
 				Object[] fila ={numPag++, aux.getObject(3), aux.getObject(2)};
-				sumaPagos=sumaPagos+(Double)aux.getObject(3);
+				sumaPagos=sumaPagos+Float.parseFloat(aux.getObject(3).toString());
 				ids.add((Integer)aux.getObject(1));
 				dtm.addRow(fila);
 			}
@@ -216,7 +216,7 @@ public class FrameInfoPag extends JFrame{
 			e.printStackTrace();
 		}
 		
-		double totRest = totalCot-sumaPagos;
+		Float totRest = totalCot-sumaPagos;
 		lblSumaTotRs.setText(String.valueOf(sumaPagos));
 		lblTotRestRs.setText(String.valueOf(totRest));	
 		if(totRest<=0){
