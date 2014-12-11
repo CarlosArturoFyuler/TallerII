@@ -41,7 +41,7 @@ public class FrameInfoCot extends JFrame{
 	private JLabel infoCot, nomClient, nom, lugarEv, lugar,
 	totalCot, total, fechaEv, fecha, tipoEv, tipo, anticipo, notasCotizacion,
 	lblcostoSalonTxt, lblcostoMusicaTxt, lblcostoOtrosTxt, lblSumaCostoTxt, lblSumaCosto,
-	lblNombreSalonTxt, lblNombreSalon;
+	lblNombreSalonTxt, lblNombreSalon, lblCostosTxt, lblRellenoTxt;
 	private JButton registrar;
 	private int idCotizacion;
 	private BDM bdm;
@@ -55,7 +55,7 @@ public class FrameInfoCot extends JFrame{
 		this.idCotizacion = idCotizacion;
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLayout(new BorderLayout(10,10));
-		this.setSize(500,600);
+		this.setSize(500,700);
 		//this.setResizable(false);
 		bdm = new BDM();
 		this.obtDatos();
@@ -87,13 +87,15 @@ public class FrameInfoCot extends JFrame{
 		
 		JPanel centroSuperior = new JPanel(new GridLayout(6,2,0,15));		
 		JPanel centroNotas = new JPanel(new GridLayout(1,2,0,0));
-		JPanel centroInferior = new JPanel(new GridLayout(6,2,0,5));
+		JPanel centroInferior = new JPanel(new GridLayout(7,2,0,5));
 		
 		try {			
 			ResultSet aux = null;
 			aux=Cotizacion.buscarCot(idCotizacion, bdm); 
 			while(aux.next()){
-				 	cot = new Cotizacion(aux.getObject(1).toString(),aux.getObject(2).toString(),aux.getObject(3).toString(),(Float)aux.getObject(4),aux.getObject(5).toString(),aux.getObject(6).toString(),aux.getObject(7).toString());
+				 	cot = new Cotizacion(aux.getObject(1).toString(),aux.getObject(2).toString()+" "+aux.getObject(3).toString()
+				 			+" "+aux.getObject(4).toString(),aux.getObject(5).toString(),(Float)aux.getObject(6),aux.getObject(7).toString(),
+				 			aux.getObject(8).toString(),aux.getObject(9).toString());
 				 	
 					tArea = new JTextArea(cot.getNotasCot());
 					nom = new JLabel(cot.getNombreCliente());
@@ -172,7 +174,7 @@ public class FrameInfoCot extends JFrame{
 			JOptionPane.showMessageDialog(this, "Por el momento no ha sido posible registrar la venta, por favor intente más tarde o comuníquese con el Administrador del sistema");
 		}
 		
-		infoCot = new JLabel("Información de la cotización");
+		infoCot = new JLabel("Información del Evento: ");
 		Font titulo = new Font("Arial", Font.BOLD, 14);
 		infoCot.setFont(titulo);
 		infoCot.setHorizontalAlignment(SwingConstants.CENTER);
@@ -180,10 +182,10 @@ public class FrameInfoCot extends JFrame{
 		
 		// ENTRA AL PANEL CENTRAL
 		nomClient = new JLabel("Nombre del cliente:");
-		tipoEv = new JLabel("Tipo de Evento:");
-		lugarEv = new JLabel("Ciudad del Evento:");
-		fechaEv = new JLabel("Fecha de Evento:");
-		lblNombreSalonTxt = new JLabel("Nombre del Salon: ");
+		tipoEv = new JLabel("Tipo:");
+		lugarEv = new JLabel("Ciudad:");
+		fechaEv = new JLabel("Fecha:");
+		lblNombreSalonTxt = new JLabel("Salón: ");
 		
 		centroSuperior.add(nomClient);
 		centroSuperior.add(nom);
@@ -202,7 +204,7 @@ public class FrameInfoCot extends JFrame{
 		
 		centro.add(centroSuperior,BorderLayout.PAGE_START);
 		
-		notasCotizacion = new JLabel("Notas Cotizacion:");
+		notasCotizacion = new JLabel("Notas Cotización:");
 		centroNotas.add(notasCotizacion);
 		tArea.setEditable(false);			
 	    tArea.setLineWrap(true);       // wrap line
@@ -216,19 +218,23 @@ public class FrameInfoCot extends JFrame{
 				
 		centro.add(centroNotas,BorderLayout.CENTER);
 		
-		totalCot = new JLabel("Costo Evento:");
+		lblRellenoTxt = new JLabel(" ");
+		lblCostosTxt = new JLabel("Costos:");
+		centroInferior.add(lblCostosTxt);		
+		totalCot = new JLabel("     Evento:");
+		centroInferior.add(lblRellenoTxt);
 		centroInferior.add(totalCot);
 		centroInferior.add(total);
-		lblcostoMusicaTxt = new JLabel("Costo Musica:");
+		lblcostoMusicaTxt = new JLabel("     Música:");
 		centroInferior.add(lblcostoMusicaTxt);
 		centroInferior.add(TFCostoMusica);
-		lblcostoSalonTxt = new JLabel("Costo Salon: ");
+		lblcostoSalonTxt = new JLabel("     Salón: ");
 		centroInferior.add(lblcostoSalonTxt);
 		centroInferior.add(TFCostoSalon);
-		lblcostoOtrosTxt = new JLabel("Costo Otros: ");
+		lblcostoOtrosTxt = new JLabel("     Otros: ");
 		centroInferior.add(lblcostoOtrosTxt);
 		centroInferior.add(TFCostoOtros);
-		lblSumaCostoTxt = new JLabel("Total: ");		
+		lblSumaCostoTxt = new JLabel("   Total: ");		
 		centroInferior.add(lblSumaCostoTxt);		
 	    
 		JPanel total = new JPanel(new FlowLayout(FlowLayout.LEADING));

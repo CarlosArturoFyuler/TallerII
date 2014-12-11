@@ -115,7 +115,7 @@ private String tipoEvento;
 		return bdm.getSt().executeQuery("SELECT idcotizacion,Nombre,apPaterno,apMaterno,nombreinsumo,ciudadevento,fechaevento FROM cotizacion where (Nombre like "+"'%"+nomClie+"%' OR nombreinsumo like "+"'%"+nomClie+ "%' OR ApPaterno like "+"'%"+nomClie+ "%' OR ApMaterno like "+"'%"+nomClie+ "%') AND estado =0 ORDER BY idcotizacion DESC");
 	}
 	public static ResultSet buscarCot(int idCot,BDM bdm) throws SQLException{
-		return bdm.getSt().executeQuery("SELECT observaciones,Nombre,ciudadevento,costototal,nombreinsumo,fechaevento,tipoevento FROM cotizacion where idCotizacion ="+idCot);
+		return bdm.getSt().executeQuery("SELECT observaciones,Nombre,ApPaterno,ApMaterno,ciudadevento,costototal,nombreinsumo,fechaevento,tipoevento FROM cotizacion where idCotizacion ="+idCot);
 	}
 	public static ResultSet obtTotal(int idVenta,BDM bdm) throws SQLException{
 		return bdm.getSt().executeQuery("SELECT costototal FROM venta where idventa ="+idVenta);
